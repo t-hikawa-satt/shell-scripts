@@ -1,0 +1,35 @@
+version: '3'
+
+tasks:
+  setup:
+    desc: 'Setup tools'
+    cmds:
+    - mise install
+
+  versions:
+    desc: 'Show versions'
+    cmds:
+    - shellcheck --version
+    - shfmt --version
+
+  check:
+    desc: 'Check'
+    cmds:
+    - task: fmt
+    - task: lint
+
+  lint:
+    desc: 'Lint'
+    cmds:
+    - shellcheck src/*.sh
+
+  fmt:
+    desc: 'Format'
+    cmds:
+    - shfmt -w src/*.sh
+
+  link:
+    desc: 'Create symlinks'
+    cmds:
+    - chmod +x ./link.sh
+    - ./link.sh {{.CLI_ARGS}}
