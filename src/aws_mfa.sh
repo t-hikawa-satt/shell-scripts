@@ -2,6 +2,20 @@
 
 set -eu
 
+# Show help if --help is present
+if [[ "$*" == *--help* ]]; then
+    cat <<EOF
+Usage: aws_mfa <device_arn> [mfa_profile]
+
+Arguments:
+  device_arn    MFA device ARN (required)
+  mfa_profile   AWS profile name to update (default: mfa)
+
+This script gets temporary AWS credentials using MFA and sets them to the specified profile.
+EOF
+    exit 0
+fi
+
 # Check required commands
 for cmd in aws jq; do
     if ! command -v "$cmd" >/dev/null 2>&1; then
