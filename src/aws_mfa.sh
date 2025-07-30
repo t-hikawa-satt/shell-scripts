@@ -62,4 +62,4 @@ aws configure set aws_secret_access_key "$secret_access_key" --profile "$mfa_pro
 aws configure set aws_session_token "$session_token" --profile "$mfa_profile"
 
 echo "Done!"
-echo "[Tips] To verify: aws sts get-caller-identity --profile <your profile>"
+echo "[Tips] To verify: aws sts get-caller-identity --profile $mfa_profile"
