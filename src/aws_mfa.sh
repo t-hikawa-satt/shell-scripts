@@ -1,0 +1,51 @@
+#!/bin/bash
+
+set -eu
+
+# Check required commands
+for cmd in aws jq; do
+    if ! command -v "$cmd" >/dev/null 2>&1; then
+        printf "[ERROR] Required command '%s' not found. Please install it.\n" "$cmd" >&2
+        exit 1
+    fi
+done
+
+# Validate arguments
+if [ $# -lt 1 ] || [ $# -gt 2 ]; then
+    printf "[ERROR] aws-mfa: Invalid arguments.\nUsage: aws-mfa <device_arn> [source_profile]\n" >&2
+    exit 1
+fi
+
+# Set device ARN and source profile
+device_arn=$1
+
+if [ $# -eq 2 ]; then
+    source_profile="$2"
+else
+    source_profile="switch-source"
+fi
+
+echo "Using profile: $source_profile"
+
+# Prompt for MFA code
+echo 'Enter MFA code:'
+read -r code
+
+# Get session token using MFA
+if ! mfa_result=$(aws sts get-session-token --serial-number "$device_arn" --token-code "$code"); then
+    printf "[ERROR] aws sts get-session-token failed\n" >&2
+    exit 1
+fi
+
+# Parse and set AWS credentials
+access_key_id=$(echo "$mfa_result" | jq -r '.Credentials.AccessKeyId')
+secret_access_key=$(echo "$mfa_result" | jq -r '.Credentials.SecretAccessKey')
+session_token=$(echo "$mfa_result" | jq -r '.Credentials.SessionToken')
+
+echo "Updating AWS credentials using aws configure set..."
+aws configure set aws_access_key_id "$access_key_id" --profile "$source_profile"
+aws configure set aws_secret_access_key "$secret_access_key" --profile "$source_profile"
+aws configure set aws_session_token "$session_token" --profile "$source_profile"
+
+echo "Done!"
+echo "[Tips] To verify: aws sts get-caller-identity --profile <your profile>"
