@@ -26,7 +26,7 @@ tasks:
   fmt:
     desc: 'Format'
     cmds:
-    - shfmt -w src/*.sh
+    - shfmt -i 4 -w src/*.sh
 
   link:
     desc: 'Create symlinks'
