@@ -15,3 +15,5 @@ You can create symlinks for all scripts in `src/` to a directory in your PATH (d
 $ task link            # Link to ~/.local/bin (default)
 $ task link -- ~/bin   # Link to ~/bin
 ```
+
+**Note:** To remove symlinks, please delete them manually from the target directory.
