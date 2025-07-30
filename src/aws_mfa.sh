@@ -22,7 +22,7 @@ device_arn=$1
 if [ $# -eq 2 ]; then
     source_profile="$2"
 else
-    source_profile="switch-source"
+    source_profile="mfa"
 fi
 
 echo "Using profile: $source_profile"
