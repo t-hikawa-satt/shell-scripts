@@ -17,9 +17,6 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Install Task
-      uses: arduino/setup-task@v2
-
     - name: Install mise and setup
       uses: jdx/mise-action@v2
       with:
@@ -28,4 +25,4 @@ jobs:
         github_token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Check
-      run: task check
+      run: mise run check

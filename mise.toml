@@ -1,3 +1,18 @@
 [tools]
 shellcheck = "0.10"
 shfmt = "3"
+
+[tasks.setup]
+description = "Setup tools"
+run = ["mise trust -yq", "mise install"]
+alias = "s"
+
+[tasks.fix]
+description = "Fix shell scripts"
+run = "shfmt -i 4 -w src/*.sh"
+alias = "f"
+
+[tasks.check]
+description = "Check shell scripts"
+run = "shellcheck src/*.sh"
+alias = "c"
